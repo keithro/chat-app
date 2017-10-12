@@ -12,20 +12,7 @@
   <p>Welcome to the chat app</p>
 
   <script src="/socket.io/socket.io.js"></script>
-  <script>
-    // initiate request from the client to communicate with the server
-    var socket = io();
-
-    // connect event listener
-    socket.on('connect', () => {
-      console.log('Connected to server');
-    });
-
-    // disconnect event listener
-    socket.on('disconnect', () => {
-      console.log('Disconnected from server');
-    });
-  </script>
+  <script src="/js/index.js"></script>
 </body>
 
 </html>
