@@ -1,14 +1,58 @@
 // initiate request from the client to communicate with the server
 var socket = io();
 
+function scrollToBottom () {
+  // Selectors
+  var messages = jQuery('#messages')
+  var newMessage = messages.children('li:last-child')
+
+  // Heights - (using prop not jQuery to ensure cross-browser compatability)
+    // height of viewport
+  var clientHeight = messages.prop('clientHeight');
+    // number of pixels we've scrolled down
+  var scrollTop = messages.prop('scrollTop');
+    // entire height of messages container
+  var scrollHeight = messages.prop('scrollHeight');
+  var newMessageHeight = newMessage.innerHeight();
+  var lastMessageHeight = newMessage.prev().innerHeight();
+
+  if (clientHeight + scrollTop + newMessageHeight + lastMessageHeight >= scrollHeight) {
+    // set scroll amount to hight of container
+    messages.scrollTop(scrollHeight);
+  }
+}
+
 // connect event listener
 socket.on('connect', function () {
-  console.log('Connected to server');
+  var params = jQuery.deparam(window.location.search);
+
+  socket.emit('join', params, function (err) {
+    if (err) {
+      // SWAP OUT FOR MODAL WHEN RESTYLING
+      alert(err);
+      window.location.href = '/'
+    } else {
+      console.log('No error');
+    }
+  });
 });
 
 // disconnect event listener
 socket.on('disconnect', function () {
   console.log('Disconnected from server');
+});
+
+// new chat room user event
+socket.on('updateUserList', function (users) {
+  var ol = jQuery('<ol></ol>');
+
+  // add each user to ol list
+  users.forEach(function (user) {
+    ol.append(jQuery('<li></li>').text(user));
+  });
+
+  // use "html" to replace list rather than append
+  jQuery('#users').html(ol);
 });
 
 // incoming message listener server to client
@@ -22,6 +66,7 @@ socket.on('newMessage', function (message) {
   });
 
   jQuery('#messages').append(html);
+  scrollToBottom();
 });
 
 // new location event listener
@@ -34,6 +79,7 @@ socket.on('newLocationMessage', function (message) {
     createdAt: formattedTime
   });
   jQuery('#messages').append(html);
+  scrollToBottom();
 });
 
 jQuery('#message-form').on('submit', function (e) {
@@ -49,6 +95,7 @@ jQuery('#message-form').on('submit', function (e) {
   });
 });
 
+// Send location
 var locationButton = jQuery('#send-location');
 
 locationButton.on('click', function () {
