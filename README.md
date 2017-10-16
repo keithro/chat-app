@@ -1,10 +1,9 @@
-add autoscrolling
-passing room data
-create rooms with socket.io
+Created with Node and Socket.io
 
-
-**update Expect (see: Node: 104)**
-
-create modals for:
-  * public/js/chat.js (x2)
-  * look for any other alerts
+Future Enhancements:
+* create modals for alerts in public/js/chat.js (x2)
+* create link (& nav) to go back to login page
+* make room names case insensitive
+* make usernames unique
+* make dropdown list of active chat rooms on Join page
+* update Expect
