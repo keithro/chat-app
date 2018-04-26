@@ -103,6 +103,7 @@ locationButton.on('click', function () {
     return alert('Geolocation not supported by your browser.');
   }
 
+  // disable button while getting/sending location
   locationButton.attr('disabled', 'disabled').text('Sending location...');
 
   navigator.geolocation.getCurrentPosition(function (position) {
